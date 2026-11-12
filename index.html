@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e293b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TaskFlow">
 <title>TaskFlow | Professional Task Management</title>
   <link rel="icon" type="image/png" href="images (2).ico">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Cpath d=%27M9 16.5l4.5 4.5L23 11%27 stroke=%27white%27 stroke-width=%273.2%27 fill=%27none%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
@@ -447,6 +452,175 @@ button,.nav,.row,.card{transition:background-color .15s,border-color .15s,box-sh
 .card{box-shadow:0 1px 2px rgba(15,23,42,.04),0 4px 12px -4px rgba(15,23,42,.06)}
 ::selection{background:var(--acc);color:#fff}
 @media print{.side,.topbar,#topActs,.fab{display:none!important}.main{margin:0!important}}
+
+/* ===== v2.6 mobile / touch layer (Android + iOS) ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+#tabbar,#scrim,.mq{display:none}
+@supports(height:100dvh){#app,main{height:100dvh}}
+@media(pointer:coarse){
+  input,select,textarea{font-size:16px!important}
+  .btn,.nav,.tacts button,.lo,.menu-btn{min-height:44px}
+  .chk{width:22px;height:22px}
+}
+@media(max-width:760px){
+  /* header: one compact row */
+  .top{position:sticky;top:0;z-index:30;flex-wrap:nowrap;gap:8px;padding:calc(8px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));min-height:0}
+  .top h2{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:0 1 auto}
+  #roleTag{display:none}
+  .top .sp{flex:1 1 0;min-width:0}
+  .tools{overflow:visible;gap:6px;margin-left:0;padding:0}
+  .tools .btn{padding:0;width:42px;height:42px;justify-content:center;border-radius:12px}
+  .tools .btn .lb,.tools .btn .kbd{display:none!important}
+  .tools [data-act=backup],.tools [data-act=mail],.tools [data-act=guide],.tools .btn:not(.sec),.tools .btn.sec:not([data-act=palette]):not([data-act=theme]):not([data-act=sound]){display:none}
+  .row .due{margin-top:2px}
+  .menu-btn{display:grid;place-items:center;width:42px;height:42px;margin-left:-6px;border-radius:12px}
+  .toolbar{padding:10px max(12px,env(safe-area-inset-left));gap:8px}
+  .toolbar .search{flex:1 1 100%}
+  /* drawer */
+  aside{left:-100%;width:min(300px,84vw);padding-top:calc(24px + env(safe-area-inset-top));padding-bottom:calc(16px + env(safe-area-inset-bottom));z-index:61;box-shadow:none}
+  aside.open{left:0;box-shadow:8px 0 30px rgba(0,0,0,.35)}
+  #scrim{display:block;position:fixed;inset:0;background:var(--ov);z-index:60;opacity:0;pointer-events:none;transition:opacity .25s}
+  #scrim.on{opacity:1;pointer-events:auto}
+  .mq{display:block;padding:6px 0 0}
+  .mq .nav-t{padding-top:14px}
+  /* bottom tab bar */
+  #tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--w);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));justify-content:space-around;align-items:center;box-shadow:0 -6px 20px -10px rgba(15,23,42,.18)}
+  #tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;font-weight:600;color:var(--mut);padding:4px 0;min-height:48px;border-radius:10px;justify-content:center}
+  #tabbar button svg{width:22px;height:22px}
+  #tabbar button.on{color:var(--acc)}
+  #tabbar .plus{flex:0 0 52px}
+  #tabbar .plus span{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--acc);color:#fff;box-shadow:0 6px 16px -4px rgba(37,99,235,.55);margin-top:-18px}
+  #tabbar .plus svg{width:24px;height:24px}
+  #content{padding:16px max(14px,env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+  #toast{left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));text-align:center}
+  .xbar{bottom:calc(84px + env(safe-area-inset-bottom))}
+  /* task rows: name + due on the left, status on the right */
+  .row{grid-template-columns:28px 1fr auto;grid-template-rows:auto auto;column-gap:12px;row-gap:2px;padding:12px 14px;align-items:center}
+  .row .chk{grid-row:1/3;grid-column:1}
+  .row .nm{grid-column:2;grid-row:1;font-size:14.5px;line-height:1.35}
+  .row>div:nth-child(3){grid-column:3;grid-row:1/3}
+  .row .due{display:block!important;grid-column:2;grid-row:2;font-size:12px;color:var(--mut)}
+  .row .due.late{color:var(--bad)}
+  .row .pr,.row .rem,.row .acts{display:none!important}
+  .row .stsel{max-width:132px}
+  .cols{display:none}
+  .addrow{min-height:48px}
+  /* board: swipe between columns */
+  .board{grid-auto-columns:82vw;scroll-snap-type:x mandatory;margin:0 -14px;padding:0 14px 24px;scroll-padding:0 14px;-webkit-overflow-scrolling:touch}
+  .board>*{scroll-snap-align:start}
+  /* calendar */
+  .calh{padding:14px;gap:8px}.calh h3{font-size:17px}
+  .calg .dow{padding:8px 0;font-size:10px;letter-spacing:.3px}
+  .cd{min-height:54px;padding:4px 2px}.cd .dn{width:22px;height:22px;font-size:12px;margin:0 auto 2px}
+  .cd .cchip{height:6px;width:6px;padding:0;border-radius:50%;display:inline-block;margin:1px;font-size:0;border:0}
+  .cd .cmore{font-size:10px;padding:0}
+  /* tables scroll inside their card */
+  .card{overflow-x:auto}
+  .tbl th,.tbl td{white-space:nowrap}
+  .tbl td.nm{white-space:normal;min-width:150px}
+  /* modal -> bottom sheet */
+  .modal{padding:0;place-items:end stretch}
+  .mbox{max-width:none;max-height:calc(100dvh - 24px - env(safe-area-inset-top));border-radius:20px 20px 0 0;animation:sheet .28s cubic-bezier(.16,1,.3,1)}
+  .mbox::before{content:"";display:block;width:40px;height:4px;border-radius:4px;background:var(--bd2);margin:8px auto 0;position:sticky;top:8px}
+  .mh{padding:14px 20px 12px}.mb{padding:18px 20px 8px}
+  .mf{position:sticky;bottom:0;padding:12px 20px calc(12px + env(safe-area-inset-bottom));border-radius:0;z-index:2}
+  .mf .btn{flex:1;justify-content:center}
+  .mb .two{grid-template-columns:1fr 1fr;gap:12px}
+  .xsec .two{grid-template-columns:1fr 1fr}.xsec .two>:first-child{grid-column:1/-1}
+  .modal:has(.alertbox){place-items:center;padding:16px}.modal:has(.alertbox) .mbox{border-radius:16px;max-width:420px}.modal:has(.alertbox) .mbox::before{display:none}
+  .modal:has(.alertbox) .mf{position:static}
+  /* palette */
+  .pal,.xpal{max-width:none}
+  /* hero + misc */
+  .hero-a{width:100%}
+  .login,.lform{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  .g2{gap:14px}
+  .ig,.ig2{gap:14px}
+}
+@media(min-width:761px) and (max-width:1100px){.top{flex-wrap:wrap}.tools{flex-wrap:wrap;margin-left:0;width:100%}.top .sp{display:none}}
+@keyframes sheet{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media(max-width:380px){.tools .btn{width:38px}#tabbar button{font-size:10px}}
+@media(max-width:760px) and (orientation:landscape){#tabbar{display:none}#content{padding-bottom:24px}.mbox{max-height:100dvh}}
+
+/* ===== v2.7 glass / translucent theme ===== */
+:root{
+  --bg:rgba(255,255,255,.35);--card:rgba(255,255,255,.55);--w:rgba(255,255,255,.62);--g1:rgba(255,255,255,.42);--g2:rgba(255,255,255,.32);
+  --line:rgba(100,116,139,.22);--line2:rgba(100,116,139,.14);--bd2:rgba(100,116,139,.32);
+  --glass-b:rgba(255,255,255,.75);--glass-hi:inset 0 1px 0 rgba(255,255,255,.85);
+  --glass-sh:0 8px 32px -8px rgba(30,41,90,.18);
+  --acc-l:rgba(37,99,235,.10);--bad-l:rgba(225,29,72,.10);--acc-b:rgba(37,99,235,.28);--ov:rgba(15,23,42,.38);
+  --blur:blur(20px) saturate(170%);
+  --bg-a:#dbeafe;--bg-b:#ede9fe;--bg-c:#d1fae5;
+  --o1:rgba(59,130,246,.55);--o2:rgba(168,85,247,.45);--o3:rgba(20,184,166,.42);--o4:rgba(244,114,182,.35);
+}
+html[data-theme=dark]{
+  --bg:rgba(255,255,255,.03);--card:rgba(20,30,52,.5);--w:rgba(20,30,52,.58);--g1:rgba(255,255,255,.045);--g2:rgba(255,255,255,.03);
+  --line:rgba(255,255,255,.11);--line2:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.18);
+  --glass-b:rgba(255,255,255,.12);--glass-hi:inset 0 1px 0 rgba(255,255,255,.08);
+  --glass-sh:0 10px 36px -10px rgba(0,0,0,.6);
+  --acc-l:rgba(59,130,246,.16);--bad-l:rgba(244,63,94,.16);--acc-b:rgba(59,130,246,.4);--ov:rgba(2,6,16,.6);
+  --bg-a:#070d1c;--bg-b:#0d0a1f;--bg-c:#06161a;
+  --o1:rgba(37,99,235,.5);--o2:rgba(124,58,237,.42);--o3:rgba(13,148,136,.32);--o4:rgba(219,39,119,.22);
+}
+html body{background:linear-gradient(135deg,var(--bg-a) 0%,var(--bg-b) 50%,var(--bg-c) 100%) fixed}
+body::before{content:"";position:fixed;inset:-15%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 38% at 12% 18%,var(--o1),transparent 70%),radial-gradient(34% 34% at 88% 12%,var(--o2),transparent 70%),radial-gradient(40% 40% at 78% 88%,var(--o3),transparent 70%),radial-gradient(30% 30% at 18% 85%,var(--o4),transparent 70%);
+  animation:orbs 26s ease-in-out infinite alternate}
+@keyframes orbs{to{transform:translate3d(2%,-2%,0) scale(1.06)}}
+#app,#login{position:relative;z-index:1}
+#app,main,#content{background:transparent!important}
+/* glass surfaces */
+.card,.kpi,.kc,.col,.cal,.search,.top,.toolbar,.mbox,.xpal,.pal,#toast,.btn.sec,.x-time,.hero-a .hbtn:not(:first-child),.gl .s,.dayp,.ig>div,.ig2>div{
+  -webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.card,.kpi,.kc,.col,.cal,.dayp{border:1px solid var(--glass-b)!important;box-shadow:var(--glass-hi),var(--glass-sh)!important}
+.col{background:var(--g1)}
+.kc{background:var(--w)}
+.top,.toolbar{background:var(--w);border-bottom:1px solid var(--glass-b);box-shadow:0 4px 24px -12px rgba(30,41,90,.2)}
+.calg .dow,.tbl th,.cols{background:transparent!important}
+.row,.fi{background:transparent}
+.row:hover,.tbl tr:hover td{background:var(--g1)}
+.btn.sec{background:var(--w);border-color:var(--glass-b);box-shadow:var(--glass-hi)}
+input,select,textarea,.search input{background:var(--w)}
+.x-add input,.fld input,.fld select,.fld textarea,.sel,.stsel{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* sidebar */
+aside{background:linear-gradient(180deg,rgba(15,23,42,.78),rgba(30,41,90,.62))!important;-webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);border-right:1px solid rgba(255,255,255,.12)}
+html[data-theme=dark] aside{background:linear-gradient(180deg,rgba(6,10,22,.7),rgba(12,16,40,.55))!important}
+/* hero keeps colour but gets a glass edge + shine */
+.hero{border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 16px 40px -14px rgba(37,99,235,.5)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.22),transparent 38%);pointer-events:none}
+.hbtn{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+/* modal */
+.modal{-webkit-backdrop-filter:blur(10px) saturate(120%);backdrop-filter:blur(10px) saturate(120%)}
+.mbox{background:rgba(255,255,255,.8);border:1px solid var(--glass-b);box-shadow:var(--glass-hi),0 30px 80px -20px rgba(15,23,42,.45)}
+html[data-theme=dark] .mbox{background:rgba(15,24,42,.82)}
+.mf{background:var(--g1)!important}
+.mh{border-bottom-color:var(--line)}
+/* toast, palette, tab bar */
+#toast{background:rgba(15,23,42,.78);border:1px solid rgba(255,255,255,.18)}
+.xpal,.pal{background:var(--w);border:1px solid var(--glass-b)}
+html body #tabbar{background:var(--w);-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);border-top:1px solid var(--glass-b)}
+aside .nav-t{color:#a5b4cf}aside .nav{color:#e2e8f5}
+/* login */
+.lform{background:transparent!important}
+.lside{background:linear-gradient(135deg,rgba(30,58,138,.75),rgba(76,29,149,.7))!important}
+.lform .box{width:100%;max-width:420px;padding:36px 34px;border-radius:24px;background:var(--w);border:1px solid var(--glass-b);box-shadow:var(--glass-hi),0 24px 60px -20px rgba(30,41,90,.35);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+.lside p{color:#d5def0}.lside small{color:#b6c3dd}.lside li svg{color:#93c5fd}
+/* page edges */
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:rgba(100,116,139,.35);border-radius:10px;border:2px solid transparent;background-clip:content-box}
+@media(max-width:760px){
+  :root,html[data-theme=dark]{--blur:blur(14px) saturate(160%)}
+  body::before{animation:none}
+}
+@media(prefers-reduced-motion:reduce){body::before{animation:none}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  :root{--card:#fff;--w:#fff;--g1:#f8fafc;--g2:#f1f5f9}html[data-theme=dark]{--card:#111a2c;--w:#111a2c;--g1:#0f1829;--g2:#0c1424}
+  html body{background:var(--bg-a)}.mbox{background:var(--w)}
+}
+@media(prefers-reduced-transparency:reduce){
+  :root{--card:#fff;--w:#fff;--g1:#f8fafc;--g2:#f1f5f9}html[data-theme=dark]{--card:#111a2c;--w:#111a2c;--g1:#0f1829;--g2:#0c1424}
+  *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
 </style>
 </head>
 <body>
@@ -1564,7 +1738,7 @@ async function updateTask(id, patch){
 }
 async function delTask(id, owner){
   const t = TL(owner || S.user.username).find(x => x.id === id);
-  if(!confirm(`CONFIRM DELETION: Purge record "${t ? t.name : 'selected item'}"? Data cannot be recovered.`)) return;
+  if(!confirm(`Delete "${t ? t.name : 'this item'}"? This cannot be undone.`)) return;
   try{ await api('task_delete', {id}); await reload(); render(); toast('Record purged successfully'); }
   catch(e){ toast(e.message); }
 }
@@ -1674,7 +1848,7 @@ function openModal(id, preset, owner){
       ${extFields(t, id)}
     </div>
     <div class="mf">
-      ${id ? '<button type="button" class="btn danger" id="m_del" style="margin-right:auto">Purge</button>' : ''}
+      ${id ? '<button type="button" class="btn danger" id="m_del" style="margin-right:auto">Delete</button>' : ''}
       <button type="button" class="btn sec" id="m_cancel">Cancel</button>
       <button class="btn" type="submit">${id ? 'Save changes' : 'Create'}</button>
     </div>
@@ -2133,6 +2307,63 @@ document.addEventListener('click', async e => {
 
 /* ---------- start ---------- */
 boot();
+</script>
+<script>
+/* v2.6 mobile helpers: tab bar, drawer backdrop + swipe, quick actions */
+(function(){
+  const $=s=>document.querySelector(s), app=$('#app'), side=$('#side');
+  if(!app||!side) return;
+  const svg=n=>{const el=document.querySelector('[data-view="'+n+'"] svg'); return el?el.outerHTML:''};
+  const scrim=document.createElement('div'); scrim.id='scrim'; app.appendChild(scrim);
+  const bar=document.createElement('nav'); bar.id='tabbar'; bar.setAttribute('aria-label','Main');
+  const tab=(v,l)=>`<button type="button" data-tab="${v}" aria-label="${l}">${svg(v)||''}<span>${l}</span></button>`;
+  const menuIc='<svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+  const plusIc='<svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+  function build(){
+    bar.innerHTML=tab('home','Home')+tab('list','Tasks')+`<button type="button" class="plus" data-tab="new" aria-label="New"><span>${plusIc}</span></button>`+tab('calendar','Calendar')+`<button type="button" data-tab="menu" aria-label="Menu">${menuIc}<span>More</span></button>`;
+  }
+  function sync(){
+    const on=document.querySelector('.nav.on'), v=on&&on.dataset.view;
+    bar.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===v));
+    scrim.classList.toggle('on',side.classList.contains('open'));
+    document.body.style.overflow=side.classList.contains('open')&&innerWidth<=760?'hidden':'';
+  }
+  function addQuick(){
+    if($('.mq')) return;
+    const q=document.createElement('div'); q.className='mq';
+    q.innerHTML='<div class="nav-t">Quick actions</div>';
+    [['backup','Backup'],['mail','Email'],['guide','Help & Guide']].forEach(([a,l])=>{
+      const b=document.createElement('button'); b.className='nav'; b.type='button'; b.textContent=l;
+      b.onclick=()=>{side.classList.remove('open');sync();const t=document.querySelector('.tools [data-act="'+a+'"]'); if(t) t.click();};
+      q.appendChild(b);
+    });
+    const me=side.querySelector('.me'); side.insertBefore(q,me);
+  }
+  bar.addEventListener('click',e=>{
+    const b=e.target.closest('[data-tab]'); if(!b) return; const t=b.dataset.tab;
+    if(t==='menu'){side.classList.toggle('open');sync();return;}
+    if(t==='new'){const p=document.querySelector('.tools .btn:not(.sec)'); if(p) p.click(); return;}
+    const n=document.querySelector('.nav[data-view="'+t+'"]'); if(n) n.click();
+  });
+  scrim.addEventListener('click',()=>{side.classList.remove('open');sync();});
+  new MutationObserver(sync).observe(side,{attributes:true,attributeFilter:['class'],subtree:true});
+  $('#menuBtn')&&$('#menuBtn').addEventListener('click',()=>setTimeout(sync,0));
+  // swipe left on the drawer to close, swipe right from the left edge to open
+  let sx=0,sy=0;
+  document.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(innerWidth>760) return; const t=e.changedTouches[0], dx=t.clientX-sx, dy=Math.abs(t.clientY-sy);
+    if(dy>60) return;
+    if(side.classList.contains('open')&&dx<-60){side.classList.remove('open');sync();}
+    else if(!side.classList.contains('open')&&sx<18&&dx>70&&!e.target.closest('.board')){side.classList.add('open');sync();}
+  },{passive:true});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&side.classList.contains('open')){side.classList.remove('open');sync();}});
+  // build once the nav icons exist
+  const go=()=>{build();addQuick();app.appendChild(bar);sync();};
+  const nav=$('#nav'); const iv=setInterval(()=>{ if(nav&&nav.querySelector('.nav svg')){clearInterval(iv);go();} },120);
+  setTimeout(()=>clearInterval(iv),8000);
+  new MutationObserver(()=>{ if(nav&&nav.querySelector('.nav')&&!bar.children.length) go(); else sync(); }).observe(nav,{childList:true,attributes:true,subtree:true,attributeFilter:['class']});
+})();
 </script>
 </body>
 </html>

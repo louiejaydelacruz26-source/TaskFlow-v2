@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TaskFlow v2.4 | Professional Task Management</title>
-  <link rel="icon" type="image/psd" href="images (2).ico">
+<title>TaskFlow | Professional Task Management</title>
+  <link rel="icon" type="image/png" href="images (2).ico">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%232563eb%27/%3E%3Cpath d=%27M9 16.5l4.5 4.5L23 11%27 stroke=%27white%27 stroke-width=%273.2%27 fill=%27none%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E">
 <style>
 :root{
@@ -436,6 +436,17 @@ html[data-theme=dark] .hero{background:linear-gradient(120deg,#1e3a8a 0%,#1d4ed8
 .fx-doc .cols>span:nth-child(6),.fx-doc .row .rem{display:none}
 #content .fx-doc .row .nm>span[style*="color:var(--mut)"]:first-child{display:none}
 @media(max-width:980px){.fx-layout{grid-template-columns:1fr}.fx-tray{position:static;max-height:none}}
+
+/* ---- v2.5 polish ---- */
+.kpis.kpis6{grid-template-columns:repeat(6,1fr)}
+@media(max-width:1500px){.kpis.kpis6{grid-template-columns:repeat(3,1fr)}.kpis.kpis6 .kpi{grid-column:auto!important}}
+@media(max-width:700px){.kpis.kpis6{grid-template-columns:1fr 1fr}}
+.bars .emp{fill:var(--mut);font-size:12px;font-weight:600}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
+button,.nav,.row,.card{transition:background-color .15s,border-color .15s,box-shadow .15s,transform .15s}
+.card{box-shadow:0 1px 2px rgba(15,23,42,.04),0 4px 12px -4px rgba(15,23,42,.06)}
+::selection{background:var(--acc);color:#fff}
+@media print{.side,.topbar,#topActs,.fab{display:none!important}.main{margin:0!important}}
 </style>
 </head>
 <body>
@@ -446,7 +457,7 @@ html[data-theme=dark] .hero{background:linear-gradient(120deg,#1e3a8a 0%,#1d4ed8
     <div class="logo"><i id="lg1"></i> TaskFlow</div>
     <div>
       <h1>Enterprise-Grade Task Management.</h1>
-      <p>Centralize your daily operations, track critical deadlines, and manage recurring workflows in a secure platform.</p>
+      <p>Plan your work, track deadlines and keep your whole team on schedule, all in one place.</p>
       <ul id="lfeat"></ul>
     </div>
     <small>&copy; <span id="yr"></span> TaskFlow</small>
@@ -454,14 +465,14 @@ html[data-theme=dark] .hero{background:linear-gradient(120deg,#1e3a8a 0%,#1d4ed8
   <div class="lform">
     <div class="box">
       <h2>Secure Workspace Access</h2>
-      <p class="sub">Authenticate to access your operational hub.</p>
+      <p class="sub">Sign in to your workspace.</p>
       <div id="lerr" class="err hidden"></div>
       <form id="lform" autocomplete="on">
         <div class="fld"><label for="fuser">Username</label><input id="fuser" placeholder="Enter username" autocomplete="username"></div>
         <div class="fld"><label for="fpass">Password</label><input id="fpass" type="password" placeholder="Enter password" autocomplete="current-password"></div>
         <button class="btn full" type="submit">Access Workspace</button>
       </form>
-      <p class="note">Account provisioning is managed by your system administrator.<br>First time here? Sign in with <b>admin</b> / <b>admin123</b>, then change the password in your profile.</p>
+      <p class="note">Accounts are created by your administrator.<br>First time here? Sign in with <b>admin</b> / <b>admin123</b>, then change the password in your profile.</p>
     </div>
   </div>
 </div>
@@ -503,7 +514,7 @@ html[data-theme=dark] .hero{background:linear-gradient(120deg,#1e3a8a 0%,#1d4ed8
 
 <script>
 /* =========================================================
-   TaskFlow v2.4 - Work Task Manager (vanilla JS, browser storage, optional cloud database backup)
+   TaskFlow v2.5 - Work Task Manager (vanilla JS, browser storage, optional cloud database backup)
    ========================================================= */
 const $ = s => document.querySelector(s);
 
@@ -1060,7 +1071,7 @@ function userHome(){
   ${hero(`${greet}, ${esc(first)}`, T, 'user')}
   <div class="card mb14">
     <div class="ch"><div><h4>Quick Add</h4><p>Type a task and press Enter.</p></div></div>
-    <form class="qa" id="qa" autocomplete="off"><input type="text" id="qa_name" placeholder="e.g. Generate weekly performance report" required><input type="date" id="qa_due" title="Due date (optional)"><label class="tg qd" title="Configure as recurring daily task"><input type="checkbox" id="qa_daily"> Daily Task</label><button class="btn" type="submit">${ic('plus')} Add Task</button></form>
+    <form class="qa" id="qa" autocomplete="off"><input type="text" id="qa_name" placeholder="e.g. Send weekly status update" required><input type="date" id="qa_due" title="Due date (optional)"><label class="tg qd" title="Configure as recurring daily task"><input type="checkbox" id="qa_daily"> Daily Task</label><button class="btn" type="submit">${ic('plus')} Add Task</button></form>
   </div>
   ${T.length ? '' : guideCard('Quick start', 'Three quick steps.', [
     ['Add your first task','Use Quick Add above, or the New Task button.'],
@@ -1256,8 +1267,8 @@ function adminHome(){
 /* ---------- TEAM TASKS (admin) ---------- */
 function teamView(){
   const T = teamFiltered();
-  const lead = `<p class="lead">Global oversight of all assigned workflows. Modify statuses in real-time, or select records to edit parameters and reassign ownership.</p>`;
-  if(!T.length) return lead + `<div class="card empty" style="padding:80px"><b>No operational records match your criteria.</b></div>`;
+  const lead = `<p class="lead">Every task across the team. Change a status inline, or click a task to edit it or reassign it.</p>`;
+  if(!T.length) return lead + `<div class="card empty" style="padding:80px"><b>No tasks match your filters.</b></div>`;
   return lead + `<div class="card"><table class="tbl"><thead><tr><th>Task / Document</th><th>Assignee</th><th>Status</th><th>Deadline</th><th class="hide-m">Priority</th><th class="hide-m">Category</th><th></th></tr></thead><tbody>
   ${T.map(t => { const c = stOf(t.status).c; return `<tr class="clk" data-a="edit" data-id="${t.id}" data-o="${esc(t.owner)}">
     <td class="nm">${formatName(t)}${isOver(t) ? '<span class="tag od">OVERDUE</span>' : ''}</td>
@@ -1287,19 +1298,19 @@ function usersView(){
       <td class="hide-m">${pend} Open <span class="mt">/ ${T.length} Total</span></td>
       <td class="hide-m" style="${od?'color:var(--bad);font-weight:700':'color:var(--mut)'}">${od}</td>
       <td class="mt hide-m">${ago(u.lastLogin)}</td>
-      <td><div class="tacts"><button data-a="uview" title="Inspect Workflows">${ic('tasks')}</button><button data-a="uassign" title="Delegate Task">${ic('plus')}</button><button data-a="uedit" title="Modify Credentials">${ic('edit')}</button>${me ? '' : `<button class="dl" data-a="udel" title="Revoke Account">${ic('trash')}</button>`}</div></td>
+      <td><div class="tacts"><button data-a="uview" title="View tasks">${ic('tasks')}</button><button data-a="uassign" title="Assign task">${ic('plus')}</button><button data-a="uedit" title="Edit user">${ic('edit')}</button>${me ? '' : `<button class="dl" data-a="udel" title="Delete user">${ic('trash')}</button>`}</div></td>
     </tr>`;
   }).join('');
   return `
-  <p class="lead">Provision and govern access controls. Each configured account operates within isolated dashboards and task directories.</p>
+  <p class="lead">Manage who can sign in. Each person has their own dashboard and task list.</p>
   <div class="kpis">
-    ${kpi('Registered Accounts', users.length, 'Total provisioned', '#2563eb', 'users')}
-    ${kpi('Active Access', active, 'Enabled profiles', '#059669', 'check')}
-    ${kpi('System Admins', admins, 'Elevated privileges', '#8b5cf6', 'shield')}
-    ${kpi('Disabled', users.length - active, 'Revoked access', '#94a3b8', 'ban')}
+    ${kpi('Total Users', users.length, 'All accounts', '#2563eb', 'users')}
+    ${kpi('Active', active, 'Can sign in', '#059669', 'check')}
+    ${kpi('Admins', admins, 'Full access', '#8b5cf6', 'shield')}
+    ${kpi('Disabled', users.length - active, 'Cannot sign in', '#94a3b8', 'ban')}
   </div>
-  <div class="card"><div class="ch"><h4>Access Management Register</h4><small>${users.length} Records</small></div>
-    <table class="tbl"><thead><tr><th>Member</th><th>Role</th><th>Access Level</th><th class="hide-m">Workload</th><th class="hide-m">Escalations</th><th class="hide-m">Last Authentication</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+  <div class="card"><div class="ch"><h4>Team Members</h4><small>${users.length} ${users.length===1?'user':'users'}</small></div>
+    <table class="tbl"><thead><tr><th>Member</th><th>Role</th><th>Status</th><th class="hide-m">Workload</th><th class="hide-m">Overdue</th><th class="hide-m">Last sign-in</th><th></th></tr></thead><tbody>${rows}</tbody></table>
   </div>`;
 }
 
@@ -1309,21 +1320,21 @@ function openUserModal(username){
   const self = !!u && u.username === S.user.username;
   $('#modalRoot').innerHTML = `
   <div class="modal" id="mod"><form class="mbox" id="mf" style="max-width:500px" autocomplete="off">
-    <div class="mh"><h3>${u ? 'Modify Credentials' : 'Provision User Account'}</h3><p>${u ? 'Update profile parameters or perform password resets.' : 'Generate secure access credentials for a new team member.'}</p></div>
+    <div class="mh"><h3>${u ? 'Edit user' : 'Add User'}</h3><p>${u ? 'Update the profile or reset the password.' : 'Create a login for a new team member.'}</p></div>
     <div class="mb">
       <div id="uerr" class="err hidden"></div>
-      <div class="fld"><label for="u_name">Official Name</label><input id="u_name" required value="${esc(u?.name || '')}" placeholder="e.g. Maria Santos"></div>
+      <div class="fld"><label for="u_name">Full name</label><input id="u_name" required value="${esc(u?.name || '')}" placeholder="e.g. Maria Santos"></div>
       <div class="two">
-        <div class="fld"><label for="u_user">System Username</label><input id="u_user" required ${u ? 'disabled' : ''} value="${esc(u?.username || '')}" placeholder="e.g. msantos"></div>
-        <div class="fld"><label for="u_pass">${u ? 'Force Password Reset' : 'Initial Password'}</label><input id="u_pass" type="text" ${u ? '' : 'required'} placeholder="${u ? 'Leave blank to preserve' : 'Minimum 6 characters'}"></div>
-        <div class="fld"><label for="u_role">Privilege Level</label><select id="u_role" ${self ? 'disabled' : ''}><option value="member" ${u?.role !== 'admin' ? 'selected' : ''}>Member (Isolated view)</option><option value="admin" ${u?.role === 'admin' ? 'selected' : ''}>System Administrator</option></select></div>
-        <div class="fld"><label for="u_active">Access Status</label><select id="u_active" ${self ? 'disabled' : ''}><option value="1" ${u?.active !== false ? 'selected' : ''}>Active (Enabled)</option><option value="0" ${u?.active === false ? 'selected' : ''}>Disabled (Revoked)</option></select></div>
+        <div class="fld"><label for="u_user">Username</label><input id="u_user" required ${u ? 'disabled' : ''} value="${esc(u?.username || '')}" placeholder="e.g. msantos"></div>
+        <div class="fld"><label for="u_pass">${u ? 'Reset password (optional)' : 'Initial Password'}</label><input id="u_pass" type="text" ${u ? '' : 'required'} placeholder="${u ? 'Leave blank to preserve' : 'Minimum 6 characters'}"></div>
+        <div class="fld"><label for="u_role">Role</label><select id="u_role" ${self ? 'disabled' : ''}><option value="member" ${u?.role !== 'admin' ? 'selected' : ''}>Member (Isolated view)</option><option value="admin" ${u?.role === 'admin' ? 'selected' : ''}>System Administrator</option></select></div>
+        <div class="fld"><label for="u_active">Status</label><select id="u_active" ${self ? 'disabled' : ''}><option value="1" ${u?.active !== false ? 'selected' : ''}>Active (Enabled)</option><option value="0" ${u?.active === false ? 'selected' : ''}>Disabled (Revoked)</option></select></div>
       </div>
     </div>
     <div class="mf">
-      ${u && !self ? '<button type="button" class="btn danger" id="u_del" style="margin-right:auto">Revoke Account</button>' : ''}
+      ${u && !self ? '<button type="button" class="btn danger" id="u_del" style="margin-right:auto">Delete user</button>' : ''}
       <button type="button" class="btn sec" id="u_cancel">Cancel</button>
-      <button class="btn" type="submit">${u ? 'Commit Changes' : 'Provision Account'}</button>
+      <button class="btn" type="submit">${u ? 'Save changes' : 'Create account'}</button>
     </div>
   </form></div>`;
   $('#u_cancel').onclick = closeModal;
@@ -1338,13 +1349,13 @@ function openUserModal(username){
     if(!name) return err('Official name is required.');
     try{
       await api('user_save', {edit:!!u, username: u ? u.username : $('#u_user').value.trim().toLowerCase(), name, password:pass, role, active});
-      await reload(); closeModal(); render(); toast(u ? 'Credentials Updated' : 'Account Provisioned');
+      await reload(); closeModal(); render(); toast(u ? 'User updated' : 'User created');
     }catch(ex){ err(ex.message); }
   };
 }
 async function delUser(un){
   const u = getUsers().find(x => x.username === un); if(!u) return;
-  if(!confirm(`PERMANENT ACTION: Revoke user "${u.name}" (@${un})?\nAll associated operational records will be purged.`)) return;
+  if(!confirm(`This cannot be undone. Delete user "${u.name}" (@${un})?\nAll of their tasks will be deleted.`)) return;
   try{ await api('user_delete', {username:un}); await reload(); render(); toast('Account successfully revoked.'); }
   catch(ex){ toast(ex.message); }
 }
@@ -1358,16 +1369,16 @@ function openAccountModal(){
     <div class="mb">
       <div id="aerr" class="err hidden"></div>
       <div class="sect" style="margin-top:0">Communication Preferences</div>
-      <div class="fld"><label for="a_mail">Corporate Email Address</label><input id="a_mail" type="email" value="${esc(u.email || '')}" placeholder="name@company.com"></div>
-      <div class="fld"><label for="a_prov">Mail Client Integration</label><select id="a_prov">
+      <div class="fld"><label for="a_mail">Email address</label><input id="a_mail" type="email" value="${esc(u.email || '')}" placeholder="name@company.com"></div>
+      <div class="fld"><label for="a_prov">Mail app</label><select id="a_prov">
         <option value="google" ${(u.mail || 'google') === 'google' ? 'selected' : ''}>Google Workspace / Gmail</option>
         <option value="outlook" ${u.mail === 'outlook' ? 'selected' : ''}>Microsoft 365 / Outlook</option>
         <option value="yahoo" ${u.mail === 'yahoo' ? 'selected' : ''}>Yahoo Enterprise</option>
         <option value="other" ${u.mail === 'other' ? 'selected' : ''}>Native OS Client (mailto)</option></select></div>
       <div style="display:flex;gap:12px"><button type="button" class="btn sec" id="a_msave">Save Preferences</button><button type="button" class="btn sec" id="a_mopen">${ic('mail')} Launch Client</button></div>
-      <div class="sect">Authentication Management</div>
+      <div class="sect">Password</div>
       <div class="fld"><label for="a_cur">Current Password</label><input id="a_cur" type="password" required></div>
-      <div class="fld"><label for="a_new">New Secure Password</label><input id="a_new" type="password" required placeholder="Minimum 6 characters"></div>
+      <div class="fld"><label for="a_new">New password</label><input id="a_new" type="password" required placeholder="Minimum 6 characters"></div>
       <div class="fld"><label for="a_cf">Verify New Password</label><input id="a_cf" type="password" required></div>
     </div>
     <div class="mf"><button type="button" class="btn sec" id="a_cancel">Close</button><button class="btn" type="submit">Update Security Policy</button></div>
@@ -1386,28 +1397,28 @@ function openAccountModal(){
     e.preventDefault();
     if($('#a_new').value.length < 6) return err('Security policy requires at least 6 characters.');
     if($('#a_new').value !== $('#a_cf').value) return err('Verification mismatch.');
-    try{ await api('change_password', {current:$('#a_cur').value, new:$('#a_new').value}); closeModal(); toast('Authentication updated'); }
+    try{ await api('change_password', {current:$('#a_cur').value, new:$('#a_new').value}); closeModal(); toast('Password updated'); }
     catch(ex){ err(ex.message); }
   };
 }
 function openGuide(){
   const list = isAdmin() ? [
-    ['Provision Accounts', 'Navigate to <b>User Management</b> and select <b>Add User</b> to generate secure credentials.'],
-    ['Delegate Workflows', 'Execute <b>Assign Task</b> to dispatch objectives to specific personnel.'],
+    ['Add team members', 'Navigate to <b>User Management</b> and select <b>Add User</b> to create a login.'],
+    ['Assign tasks', 'Use <b>Assign Task</b> to give work to a specific person.'],
     ['File Explorer & Documents', 'Use <b>Documents</b> to organize files into hierarchal folders and append daily tasks inside them.'],
-    ['Monitor Telemetry', 'The <b>Team Dashboard</b> visualizes macro workload, escalations, and global velocity.'],
+    ['Monitor your team', 'The <b>Team Dashboard</b> shows workload, overdue items and completion across the team.'],
     ['Database Backup', 'Open <b>Database Backup</b> to connect a cloud database that stores everything the users enter.'],
-    ['Access Archives', 'Retrieve finalized workflows via <b>Monthly Archives</b> for historical audit.']
+    ['Review history', 'Find completed tasks in <b>Monthly Archives</b>.']
   ] : [
-    ['Dashboard Diagnostics', 'Evaluates immediate urgencies, upcoming schedules, and delegated actions.'],
+    ['Your dashboard', 'Shows what is due soon, what is overdue and what has been assigned to you.'],
     ['File Explorer', 'Access <b>Documents</b> to manage records by categorized folders.'],
-    ['Update Telemetry', 'Modify status tags in <b>All Tasks</b>, or utilize drag-and-drop mechanics in the <b>Agile Board</b>.'],
+    ['Update progress', 'Change a task\'s status in <b>All Tasks</b>, or drag cards between columns on the <b>Agile Board</b>.'],
     ['Priority Focus', 'Review <b>Today & Overdue</b> to mitigate critical path delays.'],
     ['Historical Audit', 'Access <b>Monthly Archives</b> to retrieve successfully closed operations.']
   ];
   $('#modalRoot').innerHTML = `
   <div class="modal" id="mod"><div class="mbox" style="max-width:540px">
-    <div class="mh"><h3>System Documentation</h3><p>${isAdmin() ? 'Administrator Configuration Guide' : 'Operational Quick Start Guide'}</p></div>
+    <div class="mh"><h3>Help & Guide</h3><p>${isAdmin() ? 'Administrator guide' : 'Quick start guide'}</p></div>
     <div class="mb"><div class="gl">${list.map((s,i) => `<div class="s"><div class="no">${i+1}</div><p><b>${s[0]}</b><br>${s[1]}</p></div>`).join('')}</div>
       <div class="sect" style="margin-top:8px">Status Tag Taxonomy</div>
       <div class="sg" style="margin-bottom:20px">${STATUS.map(s => `<div>${pill(s.k)}<span>${s.d}</span></div>`).join('')}</div>
@@ -1422,12 +1433,12 @@ function openGuide(){
 function row(t){
   const c = stOf(t.status).c;
   return `<div class="row ${t.status==='Done'?'done':''}" data-id="${t.id}">
-    <input type="checkbox" class="chk" data-a="toggle" ${t.status==='Done'?'checked':''} title="Finalize Workflow">
-    <div class="nm" data-a="edit">${formatName(t)}${isOver(t)?'<span class="tag od">OVERDUE</span>':''}${t.by?`<span class="tag by" title="Delegated by ${esc(t.by)}">ASSIGNED</span>`:''}${t.daily?'<span class="tag dy" title="Recurring Daily Protocol">DAILY</span>':''}${xBadges(t)}</div>
+    <input type="checkbox" class="chk" data-a="toggle" ${t.status==='Done'?'checked':''} title="Mark as done">
+    <div class="nm" data-a="edit">${formatName(t)}${isOver(t)?'<span class="tag od">OVERDUE</span>':''}${t.by?`<span class="tag by" title="Assigned by ${esc(t.by)}">ASSIGNED</span>`:''}${t.daily?'<span class="tag dy" title="Repeats daily">DAILY</span>':''}${xBadges(t)}</div>
     <div><select class="stsel" data-a="status" style="color:${c};background-color:${c}14;border-color:${c}40">${STATUS.map(s=>`<option ${s.k===t.status?'selected':''}>${s.k}</option>`).join('')}</select></div>
     <div class="due ${isOver(t)?'late':''}">${fmtS(t.due)}</div>
     <div class="pr"><i style="background:${PRI[t.pri]}"></i>${t.pri}</div>
-    <input class="rem" data-a="remarks" value="${esc(t.remarks)}" placeholder="Attach notes...">
+    <input class="rem" data-a="remarks" value="${esc(t.remarks)}" placeholder="Add a note...">
     <div class="acts"><button data-a="edit" title="Modify Parameters">${ic('edit')}</button><button data-a="del" title="Purge Record">${ic('trash')}</button></div>
   </div>`;
 }
@@ -1439,13 +1450,13 @@ function group(key, label, color, tasks, preset){
       ${ic('chev','i car')}<span class="gname"><i style="background:${color}"></i>${esc(label)}</span><span class="cnt">${tasks.length}</span>
       <button class="addq" data-a="addin" data-p="${esc(preset)}" title="Append Record">${ic('plus')}</button>
     </div>
-    ${col ? '' : colHead + tasks.map(row).join('') + `<div class="addrow" data-a="addin" data-p="${esc(preset)}">${ic('plus')} Append New Record</div>`}
+    ${col ? '' : colHead + tasks.map(row).join('') + `<div class="addrow" data-a="addin" data-p="${esc(preset)}">${ic('plus')} Add task</div>`}
   </div>`;
 }
 function listView(){
-  const lead = `<p class="lead">${isAdmin() ? 'Personal operational queue.' : 'Global assigned workflow queue.'} Manage statuses dynamically, execute finalization via checkboxes, or select lines for deep modifications. Archived items persist in Monthly Archives.</p>`;
+  const lead = `<p class="lead">${isAdmin() ? 'Your personal task list.' : 'All tasks assigned to you.'} Change a status from the list, tick the checkbox to complete a task, or click a task to edit it. Completed tasks are kept in Monthly Archives.</p>`;
   const T = filtered().sort(byDue);
-  if(!S.tasks.length) return lead + `<div class="card empty" style="padding:80px"><b>Workspace uninitialized.</b><br>Execute <b>New Task</b> to begin tracking operations.</div>`;
+  if(!S.tasks.length) return lead + `<div class="card empty" style="padding:80px"><b>No tasks yet.</b><br>Click <b>New Task</b> to add your first one.</div>`;
   if(S.groupBy === 'cat') return lead + CATS.map(c => group('c'+c.k, c.k, c.c, T.filter(t => t.cat === c.k), 'cat:'+c.k)).join('');
   if(S.groupBy === 'status') return lead + STATUS.map(s => group('s'+s.k, s.k, s.c, T.filter(t => t.status === s.k), 'status:'+s.k)).join('');
   return lead + group('all', 'Comprehensive Register', '#2563eb', T, '');
@@ -1453,11 +1464,11 @@ function listView(){
 
 /* ---------- TODAY (own tasks) ---------- */
 function todayView(){
-  const lead = `<p class="lead">Critical path visualization. Workflows due immediately or in escalation state.</p>`;
+  const lead = `<p class="lead">Tasks that are overdue or due today.</p>`;
   const t0 = todayStr(), open = S.tasks.filter(t => t.status !== 'Done' && t.due);
   const od = open.filter(t => t.due < t0), td = open.filter(t => t.due === t0);
-  const out = (od.length ? group('od','Escalation Required','#e11d48',od,'') : '') + (td.length ? group('td','Immediate Deadline','#2563eb',td,'') : '');
-  return lead + (out || `<div class="card empty" style="padding:80px"><b>Critical path is clear.</b><br>No urgent escalation required at this moment.</div>`);
+  const out = (od.length ? group('od','Overdue','#e11d48',od,'') : '') + (td.length ? group('td','Due today','#2563eb',td,'') : '');
+  return lead + (out || `<div class="card empty" style="padding:80px"><b>You're all caught up.</b><br>Nothing is overdue or due today.</div>`);
 }
 
 /* ---------- MONTHLY HISTORY ---------- */
@@ -1486,12 +1497,12 @@ function historyView(){
   const pct = inMonth.length ? Math.round(done / inMonth.length * 100) : 0;
   const showOwner = isAdmin() && S.hu === 'all';
   const rot = d => ic('chev').replace('<svg class="i"', `<svg class="i" style="transform:rotate(${d}deg)"`);
-  const scopeSel = isAdmin() ? `<select class="sel" data-a="hu"><option value="me" ${S.hu==='me'?'selected':''}>Personal Telemetry</option><option value="all" ${S.hu==='all'?'selected':''}>Global Telemetry</option>${getUsers().filter(u => u.username !== S.user.username).map(u => `<option value="${esc(u.username)}" ${S.hu===u.username?'selected':''}>${esc(u.name)}</option>`).join('')}</select>` : '';
+  const scopeSel = isAdmin() ? `<select class="sel" data-a="hu"><option value="me" ${S.hu==='me'?'selected':''}>My tasks</option><option value="all" ${S.hu==='all'?'selected':''}>Whole team</option>${getUsers().filter(u => u.username !== S.user.username).map(u => `<option value="${esc(u.username)}" ${S.hu===u.username?'selected':''}>${esc(u.name)}</option>`).join('')}</select>` : '';
   const chips = months.slice(0, 12).map(m => {
     const n = list.filter(t => mkOf(t) === m).length;
     return `<button class="mchip ${m===S.hm?'on':''}" data-a="hpick" data-m="${m}">${monthShort(m)}<small>${n}</small></button>`;
   }).join('');
-  const head = `<p class="lead">Historical audit logs segmented by fiscal month. Finalized records are permanently retained for operational integrity tracking.</p>
+  const head = `<p class="lead">A month-by-month history of your work. Completed tasks are kept here permanently.</p>
   <div class="mnav">
     <button class="ar" data-a="hnext" title="Advance Timeframe" ${idx <= 0 ? 'disabled' : ''}>${rot(90)}</button>
     <select class="sel" data-a="hm">${months.map(m => `<option value="${m}" ${m===S.hm?'selected':''}>${monthLabel(m)}</option>`).join('')}</select>
@@ -1508,10 +1519,10 @@ function historyView(){
     ${kpi('Unresolved', open, 'Pending actions', '#2563eb', 'play')}
     ${kpi('Deficient', late, late ? 'SLA breached' : 'Zero breaches', '#e11d48', 'alert')}
   </div>`;
-  if(!shown.length) return head + `<div class="card empty" style="padding:60px"><b>Zero ${S.hf==='done' ? 'archived ' : ''}telemetry for ${monthLabel(S.hm)}.</b></div>`;
+  if(!shown.length) return head + `<div class="card empty" style="padding:60px"><b>No ${S.hf==='done' ? 'completed ' : ''}tasks for ${monthLabel(S.hm)}.</b></div>`;
   return head + `<div class="card"><table class="tbl"><thead><tr><th>Task / Document</th>${showOwner?'<th class="hide-m">Assignee</th>':''}<th>Status</th><th>Deadline</th><th class="hide-m">Priority</th><th class="hide-m">Category</th><th class="hide-m">Remarks</th></tr></thead><tbody>
   ${shown.map(t => `<tr class="clk" data-a="edit" data-id="${t.id}" data-o="${esc(t.owner)}">
-    <td class="nm" ${t.status==='Done'?'style="color:var(--mut)"':''}>${formatName(t)}${isOver(t)?'<span class="tag od">OVERDUE</span>':''}${t.daily?'<span class="tag dy" title="Recurring Protocol">DAILY</span>':''}</td>
+    <td class="nm" ${t.status==='Done'?'style="color:var(--mut)"':''}>${formatName(t)}${isOver(t)?'<span class="tag od">OVERDUE</span>':''}${t.daily?'<span class="tag dy" title="Repeats daily">DAILY</span>':''}</td>
     ${showOwner?`<td class="mt hide-m">${esc(t.ownerName)}</td>`:''}
     <td>${pill(t.status)}</td><td class="mt">${t.due ? new Date(t.due + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '-'}</td>
     <td class="hide-m"><div class="pr"><i style="background:${PRI[t.pri]}"></i>${t.pri}</div></td>
@@ -1523,12 +1534,12 @@ function historyView(){
 /* ---------- BOARD (own tasks) ---------- */
 function boardView(){
   const T = filtered();
-  return `<p class="lead">Interactive Agile canvas. Execute drag-and-drop operations to seamlessly transition status metrics across stages.</p>
+  return `<p class="lead">Drag a card to another column to change its status.</p>
   <div class="board">${STATUS.map(s => {
     const items = T.filter(t => t.status === s.k);
     return `<div class="col" data-s="${s.k}" style="--c:${s.c}"><h5>${s.k}<span>${items.length}</span></h5>
       ${items.map(t => `<div class="kc" draggable="true" data-id="${t.id}" data-a="edit">
-        <b>${formatName(t)}</b>${t.daily?'<span class="tag dy" title="Recurring Protocol">DAILY</span>':''}${xBadges(t)}
+        <b>${formatName(t)}</b>${t.daily?'<span class="tag dy" title="Repeats daily">DAILY</span>':''}${xBadges(t)}
         <div class="meta"><span class="pr"><i style="background:${PRI[t.pri]}"></i>${t.pri}</span><span ${isOver(t)?'style="color:var(--bad);font-weight:700"':''}>${fmtS(t.due)}</span><span>${esc(t.cat)}</span></div>
         ${t.remarks ? `<div class="rm">${esc(t.remarks)}</div>` : ''}</div>`).join('')}
     </div>`;
@@ -1573,9 +1584,9 @@ document.addEventListener('click', async e => {
   else if(a === 'hpick'){ S.hm = el.dataset.m; render(); }
   else if(a === 'hexp'){
     const list = histShown(histList());
-    exportCSV(list, isAdmin() && S.hu === 'all', 'telemetry_' + S.hm);
+    exportCSV(list, isAdmin() && S.hu === 'all', 'tasks_' + S.hm);
   }
-  else if(a === 'toggle'){ const t = TL(own).find(x => x.id === id); const was = t.status === 'Done'; if(await updateTask(id, {status: was ? 'Not Started' : 'Done'})){ render(); toast(was ? 'Workflow Reactivated' : 'Workflow Finalized'); } else render(); }
+  else if(a === 'toggle'){ const t = TL(own).find(x => x.id === id); const was = t.status === 'Done'; if(await updateTask(id, {status: was ? 'Not Started' : 'Done'})){ render(); toast(was ? 'Task reopened' : 'Task completed'); } else render(); }
   else if(a === 'edit') openModal(id, '', own);
   else if(a === 'del') delTask(id, own);
   else if(a === 'collapse'){ if(e.target.closest('[data-a="addin"]')) return; S.collapsed[el.dataset.g] = !S.collapsed[el.dataset.g]; render(); }
@@ -1637,8 +1648,8 @@ function openModal(id, preset, owner){
   if(isFolderDoc) rawName = t.name.split('::')[1] || '';
   if(isDocTask) rawName = t.name.split('::').slice(2).join('::') || '';
 
-  const stamp = id ? `Created ${new Date(t.created).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} · Modified ${ago(t.updated)}` : ((isFolderDoc || isDocTask) ? 'Configure parameters to deploy record.' : 'Initialize operational workflow.');
-  const assignFld = isAdmin() ? `<div class="fld"><label for="m_own">Delegate Resource</label><select id="m_own">${getUsers().filter(u => u.active !== false || u.username === owner).map(u => `<option value="${esc(u.username)}" ${u.username === owner ? 'selected' : ''}>${esc(u.name)}${u.username === S.user.username ? ' (Self)' : ''}</option>`).join('')}</select></div>` : '';
+  const stamp = id ? `Created ${new Date(t.created).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})} · Modified ${ago(t.updated)}` : ((isFolderDoc || isDocTask) ? 'Fill in the details below.' : 'Create a new task.');
+  const assignFld = isAdmin() ? `<div class="fld"><label for="m_own">Assign to</label><select id="m_own">${getUsers().filter(u => u.active !== false || u.username === owner).map(u => `<option value="${esc(u.username)}" ${u.username === owner ? 'selected' : ''}>${esc(u.name)}${u.username === S.user.username ? ' (Self)' : ''}</option>`).join('')}</select></div>` : '';
   
   let prefixHTML = '';
   if(isFolderDoc) prefixHTML = `<span style="color:var(--mut);font-weight:600;white-space:nowrap">${esc(folderName)} /</span>`;
@@ -1646,26 +1657,26 @@ function openModal(id, preset, owner){
 
   $('#modalRoot').innerHTML = `
   <div class="modal" id="mod"><form class="mbox" id="mf">
-    <div class="mh"><h3>${id ? (isFolderDoc ? 'Modify Document' : (isDocTask ? 'Modify Inside Task' : 'Modify Workflow')) : (isFolderDoc ? 'New Document' : (isDocTask ? 'New Daily Task' : (isAdmin() && owner !== S.user.username ? 'Delegate Workflow' : 'Initialize Workflow')))}</h3><p>${stamp}</p></div>
+    <div class="mh"><h3>${id ? (isFolderDoc ? 'Edit Document' : (isDocTask ? 'Edit Daily Task' : 'Edit Task')) : (isFolderDoc ? 'New Document' : (isDocTask ? 'New Daily Task' : (isAdmin() && owner !== S.user.username ? 'Assign Task' : 'New Task')))}</h3><p>${stamp}</p></div>
     <div class="mb">
       ${assignFld}
-      <div class="fld"><label for="m_name">${isFolderDoc ? 'Document Designation' : 'Workflow Designation'}</label>
-        ${(isFolderDoc || isDocTask) ? `<div style="display:flex;align-items:center;gap:8px;background:#f8fafc;padding:0 12px;border:1px solid #cbd5e1;border-radius:var(--r);transition:.2s" id="m_name_box">${prefixHTML}<input id="m_name" required value="${esc(rawName)}" style="border:0;background:none;padding:10px 0;box-shadow:none;flex:1;outline:none" placeholder="${isDocTask ? 'e.g. Verify transactions' : 'e.g. Q4 Report'}"></div>` : `<input id="m_name" required value="${esc(t.name)}" placeholder="e.g. EF-210-26_Billing_Clearance">`}
+      <div class="fld"><label for="m_name">${isFolderDoc ? 'Document name' : 'Task name'}</label>
+        ${(isFolderDoc || isDocTask) ? `<div style="display:flex;align-items:center;gap:8px;background:#f8fafc;padding:0 12px;border:1px solid #cbd5e1;border-radius:var(--r);transition:.2s" id="m_name_box">${prefixHTML}<input id="m_name" required value="${esc(rawName)}" style="border:0;background:none;padding:10px 0;box-shadow:none;flex:1;outline:none" placeholder="${isDocTask ? 'e.g. Verify transactions' : 'e.g. Q4 Report'}"></div>` : `<input id="m_name" required value="${esc(t.name)}" placeholder="e.g. Prepare monthly sales report">`}
       </div>
       <div class="two">
-        <div class="fld"><label for="m_st">Status Indicator</label><select id="m_st">${STATUS.map(s=>`<option ${s.k===t.status?'selected':''}>${s.k}</option>`).join('')}</select></div>
-        <div class="fld"><label for="m_cat">System Category</label><select id="m_cat">${CATS.map(s=>`<option ${s.k===t.cat?'selected':''}>${s.k}</option>`).join('')}</select></div>
-        <div class="fld"><label for="m_due">Deadline Target</label><input type="date" id="m_due" value="${t.daily ? '' : (t.due||'')}" ${t.daily ? 'disabled' : ''}></div>
-        <div class="fld"><label for="m_pri">Escalation Priority</label><select id="m_pri">${Object.keys(PRI).map(p=>`<option ${p===t.pri?'selected':''}>${p}</option>`).join('')}</select></div>
+        <div class="fld"><label for="m_st">Status</label><select id="m_st">${STATUS.map(s=>`<option ${s.k===t.status?'selected':''}>${s.k}</option>`).join('')}</select></div>
+        <div class="fld"><label for="m_cat">Category</label><select id="m_cat">${CATS.map(s=>`<option ${s.k===t.cat?'selected':''}>${s.k}</option>`).join('')}</select></div>
+        <div class="fld"><label for="m_due">Due date</label><input type="date" id="m_due" value="${t.daily ? '' : (t.due||'')}" ${t.daily ? 'disabled' : ''}></div>
+        <div class="fld"><label for="m_pri">Priority</label><select id="m_pri">${Object.keys(PRI).map(p=>`<option ${p===t.pri?'selected':''}>${p}</option>`).join('')}</select></div>
       </div>
-      <div class="fld dly" ${isFolderDoc ? 'style="display:none"' : ''}><label class="tg" for="m_daily"><input type="checkbox" id="m_daily" ${t.daily ? 'checked' : ''}> Execute Daily Protocol</label><small>System resets completion status automatically at 00:00 to enforce continuous operational repetition.</small></div>
-      <div class="fld"><label for="m_rem">${isFolderDoc ? 'Document Notes / Attach Links' : 'Additional Telemetry'}</label><textarea id="m_rem" rows="4" placeholder="${isFolderDoc ? 'Enter detailed notes or attach external links here...' : 'Append operational notes...'}">${esc(t.remarks)}</textarea></div>
+      <div class="fld dly" ${isFolderDoc ? 'style="display:none"' : ''}><label class="tg" for="m_daily"><input type="checkbox" id="m_daily" ${t.daily ? 'checked' : ''}> Repeat every day</label><small>The task is reset to Not Started every midnight so it comes back each day.</small></div>
+      <div class="fld"><label for="m_rem">${isFolderDoc ? 'Document notes / links' : 'Notes'}</label><textarea id="m_rem" rows="4" placeholder="${isFolderDoc ? 'Enter detailed notes or attach external links here...' : 'Add notes...'}">${esc(t.remarks)}</textarea></div>
       ${extFields(t, id)}
     </div>
     <div class="mf">
       ${id ? '<button type="button" class="btn danger" id="m_del" style="margin-right:auto">Purge</button>' : ''}
       <button type="button" class="btn sec" id="m_cancel">Cancel</button>
-      <button class="btn" type="submit">${id ? 'Commit Modification' : 'Deploy Record'}</button>
+      <button class="btn" type="submit">${id ? 'Save changes' : 'Create'}</button>
     </div>
   </form></div>`;
   
@@ -1697,7 +1708,7 @@ function openModal(id, preset, owner){
     try{
       await api('task_save', {...data, id:id || '', owner:target});
       await reload(); closeModal(); render();
-      toast(id ? 'Parameters committed' : (target !== S.user.username ? `Delegated to ${nameOf(target)}` : 'Deployment successful'));
+      toast(id ? 'Changes saved' : (target !== S.user.username ? `Assigned to ${nameOf(target)}` : 'Task created'));
     }catch(ex){ toast(ex.message); }
   };
 }
@@ -1747,15 +1758,15 @@ const pendingDaily = () => S.tasks.filter(t => t.daily && t.status !== 'Done');
 function desktopNotify(n){
   try{
     if(!('Notification' in window) || Notification.permission !== 'granted' || !document.hidden) return;
-    const nt = new Notification('TaskFlow System Alert', {body:`${n} operational protocol${n > 1 ? 's require' : ' requires'} immediate completion.`, tag:'tf-daily', requireInteraction:true});
+    const nt = new Notification('TaskFlow reminder', {body:`${n} daily task${n > 1 ? 's are' : ' is'} still open.`, tag:'tf-daily', requireInteraction:true});
     nt.onclick = () => { window.focus(); nt.close(); };
   }catch(e){}
 }
 function showDailyAlert(list){
   $('#modalRoot').innerHTML = `
-  <div class="modal" id="mod"><div class="mbox alertbox" role="alertdialog" aria-label="Escalation protocol">
+  <div class="modal" id="mod"><div class="mbox alertbox" role="alertdialog" aria-label="Daily task reminder">
     <div class="abell">${ic('bell')}</div>
-    <h3>System Alert: ${list.length} Mandatory Daily Protocol${list.length > 1 ? 's' : ''} Open</h3>
+    <h3>Reminder: ${list.length} daily task${list.length > 1 ? 's are' : ' is'} still open</h3>
     <p>Please resolve pending operations prior to EOD cut-off to maintain system compliance.</p>
     <ul>${list.slice(0, 8).map(t => `<li>${esc(formatName(t))}</li>`).join('')}${list.length > 8 ? `<li style="color:var(--mut)">+ ${list.length - 8} additional items...</li>` : ''}</ul>
     <div class="mf" style="justify-content:center"><button class="btn sec" id="al_ok">Acknowledge Alert</button><button class="btn" id="al_go">Inspect Queue</button></div>
@@ -1769,7 +1780,7 @@ function dailyAlert(){
   const list = pendingDaily(); if(!list.length) return;
   SND.last = Date.now();
   playAlarm();
-  if($('#modalRoot').innerHTML.trim()) toast(`System Alert: ${list.length} pending protocol${list.length > 1 ? 's' : ''} require attention.`);
+  if($('#modalRoot').innerHTML.trim()) toast(`Reminder: ${list.length} daily task${list.length > 1 ? 's need' : ' needs'} your attention.`);
   else showDailyAlert(list);
   desktopNotify(list.length);
 }
@@ -1780,8 +1791,8 @@ function toggleSound(){
   if(SND.on){
     const ctx = audioCtx(); if(ctx){ if(ctx.state === 'suspended') ctx.resume().catch(() => {}); beepPattern(ctx, 1, 2); }
     if('Notification' in window && Notification.permission === 'default'){ try{ Notification.requestPermission(); }catch(e){} }
-    toast('Audio Telemetry Enabled');
-  }else toast('Audio Telemetry Disabled');
+    toast('Sound on');
+  }else toast('Sound off');
 }
 setInterval(async () => {
   if(!S.user) return;
@@ -1808,7 +1819,7 @@ function mailUrl(email, prov){
 function openMail(){
   const u = getUsers().find(x => x.username === S.user.username) || {};
   if(!u.email){
-    toast('Authentication matrix requires valid email ID.');
+    toast('Please enter a valid email address.');
     openAccountModal();
     setTimeout(() => { const f = $('#a_mail'); if(f) f.focus(); }, 60);
     return;
@@ -1962,8 +1973,8 @@ function insightsView(){
   const feed = T.flatMap(t => (t.log || []).map(e => ({...e, task:plainName(t)}))).sort((a, b) => b.ts - a.ts).slice(0, 10);
   const people = team ? getUsers().map(u => [u.name, TL(u.username).filter(t => t.status !== 'Done').length, '#2563eb']) : null;
   return `${isAdmin() ? `<div style="margin-bottom:16px" class="seg"><button data-x="insscope" data-v="me" class="${team ? '' : 'on'}">My insights</button><button data-x="insscope" data-v="team" class="${team ? 'on' : ''}">Whole team</button></div>` : ''}
-  <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(168px,1fr))">${kpi('Completed this week', wk, (wk >= pwk ? '▲ ' : '▼ ') + Math.abs(wk - pwk) + ' vs last week', '#059669', 'check')}${kpi('Completion rate', rate + '%', done.length + ' of ' + T.length + ' tasks', '#2563eb', 'trend')}${kpi('On-time rate', ontime === null ? '-' : ontime + '%', 'Finished by the deadline', '#7c3aed', 'clock')}${kpi('Day streak', streak, streak ? 'Days in a row with a finished task' : 'Finish a task today to start', '#f59e0b', 'play')}${kpi('Time tracked', fmtHM(tracked) || '0m', 'Across all timers', '#0ea5e9', 'timer')}${kpi('Overdue now', overdue, overdue ? 'Needs attention' : 'All on schedule', '#e11d48', 'alert')}</div>
-  <div class="ig"><div class="card pad"><h4>Completed in the last 14 days</h4><p class="s">Finished tasks per day</p><svg class="bars" viewBox="0 0 ${W} ${H}" role="img" aria-label="Completed tasks per day for 14 days"><line class="g" x1="0" x2="${W}" y1="${H - 18}" y2="${H - 18}"/>${bars}</svg></div>
+  <div class="kpis kpis6">${kpi('Completed this week', wk, (wk >= pwk ? '▲ ' : '▼ ') + Math.abs(wk - pwk) + ' vs last week', '#059669', 'check')}${kpi('Completion rate', rate + '%', done.length + ' of ' + T.length + ' tasks', '#2563eb', 'trend')}${kpi('On-time rate', ontime === null ? '-' : ontime + '%', 'Finished by the deadline', '#7c3aed', 'clock')}${kpi('Day streak', streak, streak ? 'Days in a row with a finished task' : 'Finish a task today to start', '#f59e0b', 'play')}${kpi('Time tracked', fmtHM(tracked) || '0m', 'Across all timers', '#0ea5e9', 'timer')}${kpi('Overdue now', overdue, overdue ? 'Needs attention' : 'All on schedule', '#e11d48', 'alert')}</div>
+  <div class="ig"><div class="card pad"><h4>Completed in the last 14 days</h4><p class="s">Finished tasks per day</p><svg class="bars" viewBox="0 0 ${W} ${H}" role="img" aria-label="Completed tasks per day for 14 days"><line class="g" x1="0" x2="${W}" y1="${H - 18}" y2="${H - 18}"/>${bars}${series.some(v => v) ? '' : `<text class="emp" x="${W / 2}" y="${H / 2 - 12}" text-anchor="middle">Completed tasks will appear here</text>`}</svg></div>
   <div class="card pad"><h4>Status mix</h4><p class="s">All tasks in scope</p><div class="donut"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="${R}" stroke="var(--line2)"/>${arcs}</svg><div class="lg">${STATUS.map(s => `<div><i style="background:${s.c}"></i>${s.k}<b>${T.filter(t => t.status === s.k).length}</b></div>`).join('')}</div></div></div></div>
   <div class="ig2"><div class="card pad"><h4>Open by priority</h4><p class="s">What is waiting</p><div class="hb">${hb(Object.keys(PRI).map(p => [p, open.filter(t => t.pri === p).length, PRI[p]]), open.length)}</div></div>
   <div class="card pad"><h4>${team ? 'Workload by person' : 'Open by category'}</h4><p class="s">${team ? 'Open tasks per teammate' : 'Where the work sits'}</p><div class="hb">${team ? hb(people, Math.max(1, ...people.map(p => p[1]))) : hb(CATS.map(c => [c.k, open.filter(t => t.cat === c.k).length, c.c]), open.length)}</div></div>
